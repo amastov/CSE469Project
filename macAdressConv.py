@@ -51,13 +51,14 @@ def timeConversion():
     if (hours > 12):
         hours = hours - 12
         nightNday = 'PM'
-    return 'Time: {hours}:{minutes} {am/pm}'.format(hours, minutes, seconds,
+    return 'Time: {0}:{1} {2}'.format(hours, minutes, seconds,
                   nightNday)
     
     
     
 #Converts from little endian format
 def littleConverter(something):
+    something = int(something[0], 16)
     return (something >> 8) | ((something & 0xff) << 8)
   
 
@@ -77,7 +78,7 @@ def dateConversion():
     day = info & 0x1f
     year = ((info >> 9) & 0x7f) + 1980
            
-    return ('Date: {Month} {Day}, {Year}'.format(month, day, year))
+    return ('Date: {0} {1}, {2}'.format(month, day, year))
 
 # -f file name parse
 if ['-f'] in argVar:
