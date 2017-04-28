@@ -1,5 +1,8 @@
 #Mac Address Conversion 
 import sys
+import argparse
+import binascii
+
 print ('Number of arguments:', len(sys.argv), 'arguments.')
 print ('Argument List:', str(sys.argv))
 
@@ -43,11 +46,16 @@ if ['-D'] in argVar:
 def timeConversion():
     #Time conversion for -f
     if ['-f'] in argVar:
-    with open(args.file, 'r') as L:
-        info = int(L.read(), 16)
+        with open(args.file, 'r') as L:
+            info = int(L.read(), 16)
         
     #Time conversion for -h
     if ['-h'] in argVar:
+        info = args.hex
+    
+    
+    
+    
 
 def littleConverter(something):
     return (something >> 8) | ((something & 0xff) << 8)
@@ -55,8 +63,17 @@ def littleConverter(something):
 def dateConversion():
     #Date conversion for -f
     if ['-f'] in argVar:
-    
+        with open(args.file, 'r') as L:
+            info = int(L.read(), 16)
+        
     #Date conversion for -h
     if ['-h'] in argVar:
-        
-        
+        info = args.hex
+     
+        info = littleConverter(info)
+    
+    month = [dates(info >> 5) & 0xf]
+    day = info & ox1f
+    year = ((info >> 9 ) & ox7f) + 1980
+           
+    return ('Date: {Month} {Day}, {Year}'.format(month, day, year))
