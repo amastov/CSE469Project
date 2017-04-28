@@ -1,10 +1,14 @@
 #Mac Address Conversion 
+#Leo Lacroix
 import sys
-import argparse
-import binascii
+
 
 print ('Number of arguments:', len(sys.argv), 'arguments.')
 print ('Argument List:', str(sys.argv))
+
+dates = {1:'January', 2:'February', 3:'March', 4:'April', 5:'May', 6:'June', 
+         7:'July', 8:'August', 9:'September', 10:'October', 11:'November', 
+         12:'December'}
 
 #store our arguments in argVar array
 argVar = []
@@ -22,6 +26,58 @@ for args in sys.argv:
     argVar.append([args])
     
 print (argVar)
+    
+def timeConversion():
+    #Time conversion for -f
+    if ['-f'] in argVar:
+        with open(args.fileName, 'r') as L:
+            info = int(L.read(), 16)
+        
+    #Time conversion for -h
+    if ['-h'] in argVar:
+        info = hexValue
+   
+    info = littleConverter(info)
+    
+    seconds = (info & 0x1f) * 2
+    minutes = (info >> 5) & 0x3f
+    hours = (info >> 11) & 0x1f
+    
+    nightNday = 'AM' 
+    seconds = (info & 0x1f) * 2
+    minutes = (info >> 5) & 0x3f
+    hours = (info >> 11) & 0x1f
+    #if the time is PM
+    if (hours > 12):
+        hours = hours - 12
+        nightNday = 'PM'
+    return 'Time: {hours}:{minutes} {am/pm}'.format(hours, minutes, seconds,
+                  nightNday)
+    
+    
+    
+#Converts from little endian format
+def littleConverter(something):
+    return (something >> 8) | ((something & 0xff) << 8)
+  
+
+def dateConversion():
+    #Date conversion for -f
+    if ['-f'] in argVar:
+        with open(fileName, 'r') as L:
+            info = int(L.read(), 16)
+        
+    #Date conversion for -h
+    if ['-h'] in argVar:
+        info = hexValue
+     
+    info = littleConverter(info)
+    
+    month = dates[(info>>5) & 0xf]
+    day = info & 0x1f
+    year = ((info >> 9) & 0x7f) + 1980
+           
+    return ('Date: {Month} {Day}, {Year}'.format(month, day, year))
 
 # -f file name parse
 if ['-f'] in argVar:
@@ -32,48 +88,13 @@ if ['-f'] in argVar:
 if ['-h'] in argVar:
     flag = argVar.index(['-h'])
     hexValue = argVar[flag + 1]
-    
+    print ('Hex value: ', hexValue)
+
 if ['-T'] in argVar:
     #Run time conversions
-    result = timeConversion()
-    print (result)
+    
+    print (timeConversion())
 
 if ['-D'] in argVar:
     #Run Date conversions
-    result = dateConversion()
-    print (result)
-    
-def timeConversion():
-    #Time conversion for -f
-    if ['-f'] in argVar:
-        with open(args.file, 'r') as L:
-            info = int(L.read(), 16)
-        
-    #Time conversion for -h
-    if ['-h'] in argVar:
-        info = args.hex
-    
-    
-    
-    
-
-def littleConverter(something):
-    return (something >> 8) | ((something & 0xff) << 8)
-  
-def dateConversion():
-    #Date conversion for -f
-    if ['-f'] in argVar:
-        with open(args.file, 'r') as L:
-            info = int(L.read(), 16)
-        
-    #Date conversion for -h
-    if ['-h'] in argVar:
-        info = args.hex
-     
-        info = littleConverter(info)
-    
-    month = [dates(info >> 5) & 0xf]
-    day = info & ox1f
-    year = ((info >> 9 ) & ox7f) + 1980
-           
-    return ('Date: {Month} {Day}, {Year}'.format(month, day, year))
+    print(dateConversion())
