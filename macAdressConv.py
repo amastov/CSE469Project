@@ -3,8 +3,8 @@
 import sys
 
 
-print ('Number of arguments:', len(sys.argv), 'arguments.')
-print ('Argument List:', str(sys.argv))
+#print ('Number of arguments:', len(sys.argv), 'arguments.')
+#print ('Argument List:', str(sys.argv))
 
 dates = {1:'January', 2:'February', 3:'March', 4:'April', 5:'May', 6:'June', 
          7:'July', 8:'August', 9:'September', 10:'October', 11:'November', 
@@ -14,18 +14,18 @@ dates = {1:'January', 2:'February', 3:'March', 4:'April', 5:'May', 6:'June',
 argVar = []
 for args in sys.argv:
     arg = args.split(' ')
-    print('Input Reads')
+    #print('Input Reads')
     if '=' in args:
         arg1 = args.split('=')
         argVar.append([arg1[0]])
         argVar.append([arg1[1]])
         
     #argSub = arg.split('=')
-    print(arg)
+    #print(arg)
     #argSub = arg.split('=')
     argVar.append([args])
     
-print (argVar)
+#print (argVar)
     
 def timeConversion():
     #Time conversion for -f
@@ -84,12 +84,12 @@ def dateConversion():
 if ['-f'] in argVar:
     flag = argVar.index(['-f'])
     fileName = argVar[flag + 1]
-    print ('File name: ', fileName)
+    #print ('File name: ', fileName)
     
 if ['-h'] in argVar:
     flag = argVar.index(['-h'])
     hexValue = argVar[flag + 1]
-    print ('Hex value: ', hexValue)
+    #print ('Hex value: ', hexValue)
 
 if ['-T'] in argVar:
     #Run time conversions
