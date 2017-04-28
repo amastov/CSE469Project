@@ -172,6 +172,7 @@ def logicConvert():
         #Calls function to convert to byte address
         byteConvert()
     else:
+        print(result)
         return result
 
 def physicalConvert():
@@ -181,7 +182,7 @@ def physicalConvert():
     #converts cluster to physical address
     if (['-c'] in argVar) or (['--cluster-known'] in argVar):
         if (['-c'] in argVar) or (['--cluster-known'] in argVar):
-            result = offset + (clusterAddress - 2) * secPerCluster + reservedSectors + (numberFAT * FATlength)
+            result = int(offset[0]) + (int(clusterAddress[0]) - 2) * int(secPerCluster[0]) + int(reservedSectors[0]) + (int(numberFAT[0]) * int(FATlength[0]))
 
     #Converts logical address to physical address
     if (['-l'] in argVar) or (['--logical-known'] in argVar):
@@ -191,6 +192,7 @@ def physicalConvert():
         #Finds if there was a specification on the bytes per sector
         byteConvert()
     else:
+        print(result)
         return result
 
 def clusterConvert():
