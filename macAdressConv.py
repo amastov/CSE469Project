@@ -51,7 +51,7 @@ def timeConversion():
     if (hours > 12):
         hours = hours - 12
         nightNday = 'PM'
-    return 'Time: {0}:{1} {2}'.format(hours, minutes, seconds,
+    return 'Time: {0}:{1}:{2} {3}'.format(hours, minutes, seconds,
                   nightNday)
     
     
