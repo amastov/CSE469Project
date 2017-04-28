@@ -206,13 +206,14 @@ def clusterConvert():
 
     #Converts physical address to cluster address
     if (['-p'] in argVar) or (['--physical-known'] in argVar):
-         result = physicalAddress - offset
+         result = int(physicalAddress[0]) - int(offset[0])
     
     #Checks for need of byte conversion, if not returns result
     if (['-B'] in argVar) or (['--byte-address'] in argVar):
         #Finds if there was a specification on the bytes per sector
         byteConvert()
     else:
+        print(result)
         return result
 
 #check if arguments are valid
