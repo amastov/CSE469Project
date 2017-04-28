@@ -167,7 +167,7 @@ def logicConvert():
     #Converts for changing a cluster to a logical address
     if (['-c'] in argVar) or (['--cluster-known'] in argVar):
         result = offset + (clusterAddress - 2) * secPerCluster + reservedSectors + (numberFAT * FATlength)
-        resut = result - offset
+        result = result - offset
     if (['-B'] in argVar) or (['--byte-address'] in argVar):
         #Calls function to convert to byte address
         byteConvert()
