@@ -162,7 +162,7 @@ def logicConvert():
     
     #changes physical address to a logical address
     if (['-p'] in argVar) or (['--physical-known'] in argVar):
-        result = (physicalAddress - offset)
+        result = (int(physicalAddress[0]) - int(offset[0])
         
     #Converts for changing a cluster to a logical address
     if (['-c'] in argVar) or (['--cluster-known'] in argVar):
