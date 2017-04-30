@@ -160,7 +160,6 @@ def extractVBR(fileName, startSector):
     #fat area: start sector: end sector:
     fatStart = RAsize
     
-        
     # # of fats
     numOfFats = str(int(VBRhex[17],16))
     
@@ -170,7 +169,15 @@ def extractVBR(fileName, startSector):
     endFatSector = str(int(RAsize) + int(numOfFats) * int(sizeOfFat))
     
     # first sector of cluster 2
-    spotOfCluster2 = int(RAsize) + int(numOfFat) +
+    spotOfCluster2 = str(int(RAsize) + int(numOfFat) * int(sizeOfFat) + int(VBRhex[18:19],16))
+    
+    print('Reserved area: Start Sector: 0 Ending sector: ' + endSectorRA + ' Size: ' + RAsize + ' sectors')
+    print('Sectors per cluster: ' + secPerCluster + ' sectors')
+    print('FAT area: Start sector: ' + RAsize + ' Ending sector: ' + endFatSector)
+    print('# of FATs: ' + numOfFats)
+    print('The size of each FAT: ' + sizeOfFat + ' sectors')
+    print('The first sector of cluster 2: ' + spotOfCluster2 + ' sectors')
+    
 
 def main():
     pathImage = []
