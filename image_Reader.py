@@ -13,7 +13,7 @@ def extract_MD5_SH1(name, pathImage):
     sha1Checksum = sha1(pathImage[1][0])
     print("================================================================================")
     print("MD5 Checksum: " + md5Checksum)
-    print("SHA-1 Checksum: " + sha1Checksum)
+    print("SHA1 Checksum: " + sha1Checksum)
     print("================================================================================")
     text_fileSHA1 = open(sha1Name, "w")
     text_fileSHA1.write(sha1Checksum)
