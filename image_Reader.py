@@ -51,7 +51,8 @@ def littleConverter(something):
     something = int(something[0], 16)
     return (something >> 8) | ((something & 0xff) << 8)    
 
-def extractMBR(file):
+def extractMBR(fileName):
+    file = open(fileName, "rb")
     partitionType = {
     '01': 'DOS 12-bit FAT',
     '04': 'DOS 16-bit FAT for partitions smaller than 32MB',
@@ -82,6 +83,16 @@ def extractMBR(file):
     'eb': 'BeOS'
     }
 
+    fatTypes = {
+        '01',
+        '04',
+        '06',
+        '0b',
+        '0c',
+        '1b',
+        '86'
+    }
+
     file.seek(446)
     partitionEntry1 = file.read(16)
     partitionEntry2 = file.read(16)
@@ -108,9 +119,26 @@ def extractMBR(file):
     print("(" + partitionType2.upper() + ") " + partitionType[partitionType2] + ", " + partitionStart2 + ", " + partitionSize2)
     print("(" + partitionType3.upper() + ") " + partitionType[partitionType3] + ", " + partitionStart3 + ", " + partitionSize3)
     print("(" + partitionType4.upper() + ") " + partitionType[partitionType4] + ", " + partitionStart4 + ", " + partitionSize4)
+    file.close()
+
+    if partitionType1 in fatTypes:
+        extractVBR(fileName, int(partitionStart1))
+    if partitionType2 in fatTypes:
+        extractVBR(fileName, int(partitionStart2))
+    if partitionType3 in fatTypes:
+        extractVBR(fileName, int(partitionStart3))
+    if partitionType4 in fatTypes:
+        extractVBR(fileName, int(partitionStart4))
 
 
 
+def extractVBR(fileName, startSector):
+    startByte = startSector * 512
+    file = open(fileName, "rb")
+    file.seek(startByte)
+    VBR = file.read(36)
+    VBRhex = binascii.hexlify(VBR)
+    print(VBRhex)
 
 
 def main():
@@ -127,8 +155,8 @@ def main():
     #print(name)
 
     extract_MD5_SH1(name, pathImage)
-    f = open(pathImage[1][0], "rb")
-    extractMBR(f)
+    extractMBR(pathImage[1][0])
     
+
 if __name__ == '__main__':
 	main()
