@@ -70,7 +70,7 @@ def extractMBR(fileName):
     'c7': 'Typical of a corrupted NTFS volume/stripe set',
     'eb': 'BeOS'
     }
-    fatTypes = {
+    fatTypes =[
         '01',
         '04',
         '06',
@@ -78,9 +78,9 @@ def extractMBR(fileName):
         '0c',
         '1b',
         '86'
-    }
+    ]
     file.seek(446)
-    
+
     partitionEntry1 = file.read(16)
     partitionEntry2 = file.read(16)
     partitionEntry3 = file.read(16)
@@ -131,17 +131,17 @@ def extractMBR(fileName):
 
 def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter):
     print("Partition " + str(partitionCounter) + " (" + partitionString + ") VBR Structure:")
-    fat1612 = {
+    fat1612 = [
         '01',
         '04',
         '06',
         '86'
-    }
-    fat32 = {
+    ]
+    fat32 = [
         '0b',
         '0c',
         '1b'
-    }
+    ]
     startByte = startSector * 512
     file = open(fileName, "rb")
     file.seek(startByte)
