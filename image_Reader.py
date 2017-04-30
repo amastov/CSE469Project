@@ -6,6 +6,7 @@ import hashlib
 import math
 import binascii
 import hashlib
+import struct
 
 
 
@@ -98,18 +99,22 @@ def extractMBR(fileName):
     partitionEntry2 = file.read(16)
     partitionEntry3 = file.read(16)
     partitionEntry4 = file.read(16)
+
     hexadecimal1 = binascii.hexlify(partitionEntry1)
     hexadecimal2 = binascii.hexlify(partitionEntry2)
     hexadecimal3 = binascii.hexlify(partitionEntry3)
     hexadecimal4 = binascii.hexlify(partitionEntry4)
+
     partitionType1 = hexadecimal1[8:10]
     partitionType2 = hexadecimal2[8:10]
     partitionType3 = hexadecimal3[8:10]
     partitionType4 = hexadecimal4[8:10]
+
     partitionSize1 = str(int(hexadecimal1[24:32], 16))
     partitionSize2 = str(int(hexadecimal2[24:32], 16))
     partitionSize3 = str(int(hexadecimal3[24:32], 16))
     partitionSize4 = str(int(hexadecimal4[24:32], 16))
+
     partitionStart1 = str(int(hexadecimal1[16:24], 16))
     partitionStart2 = str(int(hexadecimal2[16:24], 16))
     partitionStart3 = str(int(hexadecimal3[16:24], 16))
@@ -130,16 +135,14 @@ def extractMBR(fileName):
     if partitionType4 in fatTypes:
         extractVBR(fileName, int(partitionStart4))
 
-
-
 def extractVBR(fileName, startSector):
     startByte = startSector * 512
+    #startByte = 32256
     file = open(fileName, "rb")
     file.seek(startByte)
     VBR = file.read(36)
     VBRhex = binascii.hexlify(VBR)
     print(VBRhex)
-
 
 def main():
     pathImage = []
