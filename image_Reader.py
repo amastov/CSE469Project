@@ -1,16 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Apr 29 23:33:26 2017
-
-@author: lelac
-"""
-
-#image Reader, attribute producer
-
 import sys
 import os.path
 import hashlib
-import math
 import binascii
 import hashlib
 import struct
@@ -21,8 +11,6 @@ def extract_MD5_SH1(name, pathImage):
     print("================================================================================")
     print(md5Name)
     print(sha1Name)
-    #calculations go here
-    #print (pathImage[1][0])
     md5Checksum = md5(pathImage[1][0])
     sha1Checksum = sha1(pathImage[1][0])
     print("================================================================================")
@@ -35,7 +23,6 @@ def extract_MD5_SH1(name, pathImage):
     text_fileMD5 = open(md5Name, "w")
     text_fileMD5.write(md5Checksum)
     text_fileMD5.close()
-    
     
 def md5(fname):
     hash_md5 = hashlib.md5()
@@ -56,6 +43,8 @@ def littleConverter(something):
     return (something >> 8) | ((something & 0xff) << 8)    
 
 def extractMBR(fileName):
+    print("MBR Structure: (Partition Type Code) (Partition Type) (Start Sector) (Size)")
+    print("================================================================================")
     partitionCounter = 0
     file = open(fileName, "rb")
     partitionType = {
@@ -151,7 +140,7 @@ def extractMBR(fileName):
         partitionCounter = partitionCounter + 1
 
 def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter):
-    print("Partition " + str(partitionCounter) + " (" + partitionString + ")")
+    print("Partition " + str(partitionCounter) + " (" + partitionString + ") VBR Structure:")
     fat1612 = {
         '01',
         '04',
@@ -171,20 +160,17 @@ def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter
     if fatType in fat32:
         VBR = file.read(48)
     VBRhex = binascii.hexlify(VBR)
-    #reserved area #start sector #ending sector #size
+
     startSectorRA = 0
     endSectorRA = str(int(VBRhex[28:30], 16) - 1)
     RAsize = str(int(VBRhex[28:30], 16))
-    #sectors per cluster
+ 
     secPerCluster = str(int(VBRhex[27], 16))
     
-    #fat area: start sector: end sector:
     fatStart = RAsize
     
-    # # of fats
     numOfFats = str(int(VBRhex[33],16))
     
-    # size of each fat
     if fatType in fat1612:
         sizeOfFat = str(int(VBRhex[44:46], 16))
 
@@ -193,7 +179,6 @@ def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter
     
     endFatSector = str(int(RAsize) + int(numOfFats) * int(sizeOfFat) - 1)
     
-    # first sector of cluster 2
     if fatType in fat1612:
         rootDirectOffset =  str(int(VBRhex[33:35], 16))
         spotOfCluster2 = str(int(rootDirectOffset) +int(startSector) + int(RAsize) + int(numOfFats) * int(sizeOfFat) + int(VBRhex[34:36],16))
@@ -216,15 +201,11 @@ def main():
         pathImage.append(arg)
     base=os.path.basename(pathImage[1][0])
     name = os.path.splitext(base)
-    #base = base imageName, with extention
-    #print(base)
+
     name = name[0]
-    #Base is image name stripped of file type designation
-    #print(name)
 
     extract_MD5_SH1(name, pathImage)
     extractMBR(pathImage[1][0])
     
-
 if __name__ == '__main__':
 	main()
