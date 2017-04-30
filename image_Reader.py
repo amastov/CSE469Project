@@ -41,7 +41,7 @@ def littleConverter(something):
     return (something >> 8) | ((something & 0xff) << 8)    
 
 def extractMBR(fileName):
-    print("MBR Structure: (Partition Type Code) (Partition Type) (Start Sector) (Size)")
+    print("MBR Structure: (Partition Type Code) (Partition Type), (Start Sector), (Size)")
     print("================================================================================")
     partitionCounter = 0
     file = open(fileName, "rb")
