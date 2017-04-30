@@ -15,24 +15,20 @@ import binascii
 import hashlib
 import struct
 
-
-
-#read in Image file
-pathImage = []
-#    arg = args.split('/')
-#    pathImage.append(args)
-
 def extract_MD5_SH1(name, pathImage): 
     sha1Name = 'SHA1-' + name + '.txt'
     md5Name = 'MD5-' + name + '.txt'
-    print(sha1Name)
+    print("=======================================================================================================")
     print(md5Name)
+    print(sha1Name)
     #calculations go here
     #print (pathImage[1][0])
     md5Checksum = md5(pathImage[1][0])
-    #print(md5Checksum)
     sha1Checksum = sha1(pathImage[1][0])
-    #print(sha1Checksum)
+    print("=======================================================================================================")
+    print("MD5 Checksum: " + md5Checksum)
+    print("SHA-1 Checksum: " + sha1Checksum)
+    print("=======================================================================================================")
     text_fileSHA1 = open(sha1Name, "w")
     text_fileSHA1.write(sha1Checksum)
     text_fileSHA1.close()
@@ -60,6 +56,7 @@ def littleConverter(something):
     return (something >> 8) | ((something & 0xff) << 8)    
 
 def extractMBR(fileName):
+    partitionCounter = 0
     file = open(fileName, "rb")
     partitionType = {
     '01': 'DOS 12-bit FAT',
@@ -127,49 +124,77 @@ def extractMBR(fileName):
     partitionStart3 = str(int(hexadecimal3[22:24] + hexadecimal3[20:22] + hexadecimal3[18:20] + hexadecimal3[16:18], 16))
     partitionStart4 = str(int(hexadecimal4[22:24] + hexadecimal4[20:22] + hexadecimal4[18:20] + hexadecimal4[16:18], 16))
 
-    print("(" + partitionType1.upper() + ") " + partitionType[partitionType1] + ", " + partitionStart1 + ", " + partitionSize1)
-    print("(" + partitionType2.upper() + ") " + partitionType[partitionType2] + ", " + partitionStart2 + ", " + partitionSize2)
-    print("(" + partitionType3.upper() + ") " + partitionType[partitionType3] + ", " + partitionStart3 + ", " + partitionSize3)
-    print("(" + partitionType4.upper() + ") " + partitionType[partitionType4] + ", " + partitionStart4 + ", " + partitionSize4)
+    print("(" + partitionType1.upper() + ") " + partitionType[partitionType1] + ", Start Sector Address: " + partitionStart1 + ", Size of Partition: " + partitionSize1)
+    print("=======================================================================================================")
+    print("(" + partitionType2.upper() + ") " + partitionType[partitionType2] + ", Start Sector Address: " + partitionStart2 + ", Size of Partition: " + partitionSize2)
+    print("=======================================================================================================")
+    print("(" + partitionType3.upper() + ") " + partitionType[partitionType3] + ", Start Sector Address: " + partitionStart3 + ", Size of Partition: " + partitionSize3)
+    print("=======================================================================================================")
+    print("(" + partitionType4.upper() + ") " + partitionType[partitionType4] + ", Start Sector Address: " + partitionStart4 + ", Size of Partition: " + partitionSize4)
+    print("=======================================================================================================")
     file.close()
 
     if partitionType1 in fatTypes:
-        extractVBR(fileName, int(partitionStart1))
-    if partitionType2 in fatTypes:
-        extractVBR(fileName, int(partitionStart2))
-    if partitionType3 in fatTypes:
-        extractVBR(fileName, int(partitionStart3))
-    if partitionType4 in fatTypes:
-        extractVBR(fileName, int(partitionStart4))
+        extractVBR(fileName, int(partitionStart1), partitionType1, partitionType[partitionType1], partitionCounter)
+        partitionCounter = partitionCounter + 1
 
-def extractVBR(fileName, startSector):
+    if partitionType2 in fatTypes:
+        extractVBR(fileName, int(partitionStart2), partitionType2, partitionType[partitionType2], partitionCounter)
+        partitionCounter = partitionCounter + 1
+
+    if partitionType3 in fatTypes:
+        extractVBR(fileName, int(partitionStart3), partitionType3, partitionType[partitionType3], partitionCounter)
+        partitionCounter = partitionCounter + 1
+
+    if partitionType4 in fatTypes:
+        extractVBR(fileName, int(partitionStart4), partitionType4, partitionType[partitionType4], partitionCounter)
+        partitionCounter = partitionCounter + 1
+
+def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter):
+    print("Partition " + str(partitionCounter) + " (" + partitionString + ")")
+    fat1612 = {
+        '01',
+        '04',
+        '06',
+        '86'
+    }
+    fat32 = {
+        '0b',
+        '0c',
+        '1b'
+    }
     startByte = startSector * 512
-    #startByte = 32256
     file = open(fileName, "rb")
     file.seek(startByte)
-    VBR = file.read(36)
+    if fatType in fat1612:
+        VBR = file.read(36)
+    if fatType in fat32:
+        VBR = file.read(48)
     VBRhex = binascii.hexlify(VBR)
     #reserved area #start sector #ending sector #size
     startSectorRA = 0
-    endSectorRA = str(int(VBRRhex[15:16], 16) -1)
-    RAsize = str(int(VBRRhex[15:16], 16))
-    
+    endSectorRA = str(int(VBRhex[28:30], 16) - 1)
+    RAsize = str(int(VBRhex[28:30], 16))
     #sectors per cluster
-    secPerCluster = str(int(VBRhex[14], 16))
+    secPerCluster = str(int(VBRhex[27], 16))
     
     #fat area: start sector: end sector:
     fatStart = RAsize
     
     # # of fats
-    numOfFats = str(int(VBRhex[17],16))
+    numOfFats = str(int(VBRhex[33],16))
     
     # size of each fat
-    sizeOfFat = str(int(VBRhex[23:24], 16))
+    if fatType in fat1612:
+        sizeOfFat = str(int(VBRhex[44:46], 16))
+
+    if fatType in fat32:
+        sizeOfFat = str(int(VBRhex[76:78] + VBRhex[74:76] + VBRhex[72:74], 16))
     
-    endFatSector = str(int(RAsize) + int(numOfFats) * int(sizeOfFat))
+    endFatSector = str(int(RAsize) + int(numOfFats) * int(sizeOfFat) - 1)
     
     # first sector of cluster 2
-    spotOfCluster2 = str(int(RAsize) + int(numOfFat) * int(sizeOfFat) + int(VBRhex[18:19],16))
+    spotOfCluster2 = str(int(RAsize) + int(numOfFats) * int(sizeOfFat) + int(VBRhex[34:36],16))
     
     print('Reserved area: Start Sector: 0 Ending sector: ' + endSectorRA + ' Size: ' + RAsize + ' sectors')
     print('Sectors per cluster: ' + secPerCluster + ' sectors')
@@ -177,7 +202,8 @@ def extractVBR(fileName, startSector):
     print('# of FATs: ' + numOfFats)
     print('The size of each FAT: ' + sizeOfFat + ' sectors')
     print('The first sector of cluster 2: ' + spotOfCluster2 + ' sectors')
-    
+    file.close()
+    print("=======================================================================================================")
 
 def main():
     pathImage = []
