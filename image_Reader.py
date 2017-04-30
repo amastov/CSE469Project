@@ -194,7 +194,11 @@ def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter
     endFatSector = str(int(RAsize) + int(numOfFats) * int(sizeOfFat) - 1)
     
     # first sector of cluster 2
-    spotOfCluster2 = str(int(RAsize) + int(numOfFats) * int(sizeOfFat) + int(VBRhex[34:36],16))
+    if fatType in fat1612:
+        rootDirectOffset =  str(int(VBRhex[33:35], 16))
+        spotOfCluster2 = str(int(rootDirectOffset) +int(startSector) + int(RAsize) + int(numOfFats) * int(sizeOfFat) + int(VBRhex[34:36],16))
+    else:
+        spotOfCluster2 = str(int(startSector) + int(RAsize) + int(numOfFats) * int(sizeOfFat) + int(VBRhex[34:36],16))
     
     print('Reserved area: Start Sector: 0 Ending sector: ' + endSectorRA + ' Size: ' + RAsize + ' sectors')
     print('Sectors per cluster: ' + secPerCluster + ' sectors')
