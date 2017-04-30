@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Apr 29 23:33:26 2017
+
+@author: lelac
+"""
+
 #image Reader, attribute producer
 
 import sys
@@ -142,15 +149,28 @@ def extractVBR(fileName, startSector):
     file.seek(startByte)
     VBR = file.read(36)
     VBRhex = binascii.hexlify(VBR)
-    #reserved area
-    #start sector
-    #ending sector
-    #size
+    #reserved area #start sector #ending sector #size
+    startSectorRA = 0
+    endSectorRA = str(int(VBRRhex[15:16], 16) -1)
+    RAsize = str(int(VBRRhex[15:16], 16))
+    
     #sectors per cluster
+    secPerCluster = str(int(VBRhex[14], 16))
+    
     #fat area: start sector: end sector:
+    fatStart = RAsize
+    
+        
     # # of fats
+    numOfFats = str(int(VBRhex[17],16))
+    
     # size of each fat
+    sizeOfFat = str(int(VBRhex[23:24], 16))
+    
+    endFatSector = str(int(RAsize) + int(numOfFats) * int(sizeOfFat))
+    
     # first sector of cluster 2
+    spotOfCluster2 = int(RAsize) + int(numOfFat) +
 
 def main():
     pathImage = []
