@@ -36,10 +36,6 @@ def sha1(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-def littleConverter(something):
-    something = int(something[0], 16)
-    return (something >> 8) | ((something & 0xff) << 8)    
-
 def extractMBR(fileName):
     print("MBR Structure: (Partition Type Code) (Partition Type), (Start Sector), (Size)")
     print("================================================================================")
@@ -74,7 +70,6 @@ def extractMBR(fileName):
     'c7': 'Typical of a corrupted NTFS volume/stripe set',
     'eb': 'BeOS'
     }
-
     fatTypes = {
         '01',
         '04',
@@ -84,8 +79,8 @@ def extractMBR(fileName):
         '1b',
         '86'
     }
-
     file.seek(446)
+    
     partitionEntry1 = file.read(16)
     partitionEntry2 = file.read(16)
     partitionEntry3 = file.read(16)
@@ -124,15 +119,12 @@ def extractMBR(fileName):
     if partitionType1 in fatTypes:
         extractVBR(fileName, int(partitionStart1), partitionType1, partitionType[partitionType1], partitionCounter)
         partitionCounter = partitionCounter + 1
-
     if partitionType2 in fatTypes:
         extractVBR(fileName, int(partitionStart2), partitionType2, partitionType[partitionType2], partitionCounter)
         partitionCounter = partitionCounter + 1
-
     if partitionType3 in fatTypes:
         extractVBR(fileName, int(partitionStart3), partitionType3, partitionType[partitionType3], partitionCounter)
         partitionCounter = partitionCounter + 1
-
     if partitionType4 in fatTypes:
         extractVBR(fileName, int(partitionStart4), partitionType4, partitionType[partitionType4], partitionCounter)
         partitionCounter = partitionCounter + 1
@@ -153,6 +145,7 @@ def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter
     startByte = startSector * 512
     file = open(fileName, "rb")
     file.seek(startByte)
+
     if fatType in fat1612:
         VBR = file.read(36)
     if fatType in fat32:
@@ -162,25 +155,21 @@ def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter
     startSectorRA = 0
     endSectorRA = str(int(VBRhex[28:30], 16) - 1)
     RAsize = str(int(VBRhex[28:30], 16))
- 
     secPerCluster = str(int(VBRhex[27], 16))
-    
     fatStart = RAsize
-    
     numOfFats = str(int(VBRhex[33],16))
     
     if fatType in fat1612:
         sizeOfFat = str(int(VBRhex[44:46], 16))
-
     if fatType in fat32:
         sizeOfFat = str(int(VBRhex[76:78] + VBRhex[74:76] + VBRhex[72:74], 16))
-    
+
     endFatSector = str(int(RAsize) + int(numOfFats) * int(sizeOfFat) - 1)
     
     if fatType in fat1612:
         rootDirectOffset =  str(int(VBRhex[33:35], 16))
         spotOfCluster2 = str(int(rootDirectOffset) +int(startSector) + int(RAsize) + int(numOfFats) * int(sizeOfFat) + int(VBRhex[34:36],16))
-    else:
+    if fatType in fat32:
         spotOfCluster2 = str(int(startSector) + int(RAsize) + int(numOfFats) * int(sizeOfFat) + int(VBRhex[34:36],16))
     
     print('Reserved area: Start Sector: 0 Ending sector: ' + endSectorRA + ' Size: ' + RAsize + ' sectors')
@@ -199,9 +188,7 @@ def main():
         pathImage.append(arg)
     base=os.path.basename(pathImage[1][0])
     name = os.path.splitext(base)
-
     name = name[0]
-
     extract_MD5_SH1(name, pathImage)
     extractMBR(pathImage[1][0])
     
