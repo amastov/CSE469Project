@@ -18,17 +18,17 @@ import struct
 def extract_MD5_SH1(name, pathImage): 
     sha1Name = 'SHA1-' + name + '.txt'
     md5Name = 'MD5-' + name + '.txt'
-    print("=======================================================================================================")
+    print("================================================================================")
     print(md5Name)
     print(sha1Name)
     #calculations go here
     #print (pathImage[1][0])
     md5Checksum = md5(pathImage[1][0])
     sha1Checksum = sha1(pathImage[1][0])
-    print("=======================================================================================================")
+    print("================================================================================")
     print("MD5 Checksum: " + md5Checksum)
     print("SHA-1 Checksum: " + sha1Checksum)
-    print("=======================================================================================================")
+    print("================================================================================")
     text_fileSHA1 = open(sha1Name, "w")
     text_fileSHA1.write(sha1Checksum)
     text_fileSHA1.close()
@@ -124,14 +124,14 @@ def extractMBR(fileName):
     partitionStart3 = str(int(hexadecimal3[22:24] + hexadecimal3[20:22] + hexadecimal3[18:20] + hexadecimal3[16:18], 16))
     partitionStart4 = str(int(hexadecimal4[22:24] + hexadecimal4[20:22] + hexadecimal4[18:20] + hexadecimal4[16:18], 16))
 
-    print("(" + partitionType1.upper() + ") " + partitionType[partitionType1] + ", Start Sector Address: " + partitionStart1 + ", Size of Partition: " + partitionSize1)
-    print("=======================================================================================================")
-    print("(" + partitionType2.upper() + ") " + partitionType[partitionType2] + ", Start Sector Address: " + partitionStart2 + ", Size of Partition: " + partitionSize2)
-    print("=======================================================================================================")
-    print("(" + partitionType3.upper() + ") " + partitionType[partitionType3] + ", Start Sector Address: " + partitionStart3 + ", Size of Partition: " + partitionSize3)
-    print("=======================================================================================================")
-    print("(" + partitionType4.upper() + ") " + partitionType[partitionType4] + ", Start Sector Address: " + partitionStart4 + ", Size of Partition: " + partitionSize4)
-    print("=======================================================================================================")
+    print("(" + partitionType1.upper() + ") " + partitionType[partitionType1] + ", " + partitionStart1 + ", " + partitionSize1)
+    print("================================================================================")
+    print("(" + partitionType2.upper() + ") " + partitionType[partitionType2] + ", " + partitionStart2 + ", " + partitionSize2)
+    print("================================================================================")
+    print("(" + partitionType3.upper() + ") " + partitionType[partitionType3] + ", " + partitionStart3 + ", " + partitionSize3)
+    print("================================================================================")
+    print("(" + partitionType4.upper() + ") " + partitionType[partitionType4] + ", " + partitionStart4 + ", " + partitionSize4)
+    print("================================================================================")
     file.close()
 
     if partitionType1 in fatTypes:
@@ -203,7 +203,7 @@ def extractVBR(fileName, startSector, fatType, partitionString, partitionCounter
     print('The size of each FAT: ' + sizeOfFat + ' sectors')
     print('The first sector of cluster 2: ' + spotOfCluster2 + ' sectors')
     file.close()
-    print("=======================================================================================================")
+    print("================================================================================")
 
 def main():
     pathImage = []
