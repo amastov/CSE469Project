@@ -2,8 +2,6 @@ import sys
 import os.path
 import hashlib
 import binascii
-import hashlib
-import struct
 
 def extract_MD5_SH1(name, pathImage): 
     sha1Name = 'SHA1-' + name + '.txt'
