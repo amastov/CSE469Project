@@ -110,15 +110,15 @@ def extractMBR(fileName):
     partitionType3 = hexadecimal3[8:10]
     partitionType4 = hexadecimal4[8:10]
 
-    partitionSize1 = str(int(hexadecimal1[24:32], 16))
-    partitionSize2 = str(int(hexadecimal2[24:32], 16))
-    partitionSize3 = str(int(hexadecimal3[24:32], 16))
-    partitionSize4 = str(int(hexadecimal4[24:32], 16))
+    partitionSize1 = str(int(hexadecimal1[30:32] + hexadecimal1[28:30] + hexadecimal1[26:28] + hexadecimal1[24:26], 16))
+    partitionSize2 = str(int(hexadecimal2[30:32] + hexadecimal2[28:30] + hexadecimal2[26:28] + hexadecimal2[24:26], 16))
+    partitionSize3 = str(int(hexadecimal3[30:32] + hexadecimal3[28:30] + hexadecimal3[26:28] + hexadecimal3[24:26], 16))
+    partitionSize4 = str(int(hexadecimal4[30:32] + hexadecimal4[28:30] + hexadecimal4[26:28] + hexadecimal4[24:26], 16))
 
-    partitionStart1 = str(int(hexadecimal1[16:24], 16))
-    partitionStart2 = str(int(hexadecimal2[16:24], 16))
-    partitionStart3 = str(int(hexadecimal3[16:24], 16))
-    partitionStart4 = str(int(hexadecimal4[16:24], 16))
+    partitionStart1 = str(int(hexadecimal1[22:24] + hexadecimal1[20:22] + hexadecimal1[18:20] + hexadecimal1[16:18], 16))
+    partitionStart2 = str(int(hexadecimal2[22:24] + hexadecimal2[20:22] + hexadecimal2[18:20] + hexadecimal2[16:18], 16))
+    partitionStart3 = str(int(hexadecimal3[22:24] + hexadecimal3[20:22] + hexadecimal3[18:20] + hexadecimal3[16:18], 16))
+    partitionStart4 = str(int(hexadecimal4[22:24] + hexadecimal4[20:22] + hexadecimal4[18:20] + hexadecimal4[16:18], 16))
 
     print("(" + partitionType1.upper() + ") " + partitionType[partitionType1] + ", " + partitionStart1 + ", " + partitionSize1)
     print("(" + partitionType2.upper() + ") " + partitionType[partitionType2] + ", " + partitionStart2 + ", " + partitionSize2)
