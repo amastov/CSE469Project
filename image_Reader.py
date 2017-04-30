@@ -105,10 +105,10 @@ def extractMBR(fileName):
     hexadecimal3 = binascii.hexlify(partitionEntry3)
     hexadecimal4 = binascii.hexlify(partitionEntry4)
 
-    partitionType1 = hexadecimal1[8:10]
-    partitionType2 = hexadecimal2[8:10]
-    partitionType3 = hexadecimal3[8:10]
-    partitionType4 = hexadecimal4[8:10]
+    partitionType1 = str(hexadecimal1[8:10])
+    partitionType2 = str(hexadecimal2[8:10])
+    partitionType3 = str(hexadecimal3[8:10])
+    partitionType4 = str(hexadecimal4[8:10])
 
     partitionSize1 = str(int(hexadecimal1[30:32] + hexadecimal1[28:30] + hexadecimal1[26:28] + hexadecimal1[24:26], 16))
     partitionSize2 = str(int(hexadecimal2[30:32] + hexadecimal2[28:30] + hexadecimal2[26:28] + hexadecimal2[24:26], 16))
@@ -142,7 +142,15 @@ def extractVBR(fileName, startSector):
     file.seek(startByte)
     VBR = file.read(36)
     VBRhex = binascii.hexlify(VBR)
-    print(VBRhex)
+    #reserved area
+    #start sector
+    #ending sector
+    #size
+    #sectors per cluster
+    #fat area: start sector: end sector:
+    # # of fats
+    # size of each fat
+    # first sector of cluster 2
 
 def main():
     pathImage = []
